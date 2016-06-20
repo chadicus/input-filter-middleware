@@ -1,5 +1,5 @@
 {
-    "name": "chadicus/psr-input-filter",
+    "name": "chadicus/input-filter-middleware",
     "description": "PSR-7 middleware for filtering request input",
     "keywords": ["psr", "middleware", "input", "filter"],
     "license": "MIT",

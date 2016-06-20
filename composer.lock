@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "8f4bc4354e06d171be23bd70d44c0c32",
-    "content-hash": "0d8649b753feabe36882fcc8dcd3fa6d",
+    "hash": "be07d06cefe9880b516d71b1592f788b",
+    "content-hash": "7ca5e083b04b8d8ae7e810599225743c",
     "packages": [
         {
             "name": "dominionenterprises/filter",
@@ -118,16 +118,16 @@
     "packages-dev": [
         {
             "name": "chadicus/coding-standard",
-            "version": "v1.1.0",
+            "version": "v1.1.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/chadicus/coding-standard.git",
-                "reference": "a9a4e1be55cefff8388da7644f3d36a009f16a32"
+                "reference": "9f05e003457f38317a2df30efa037b3df8f43d26"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/chadicus/coding-standard/zipball/a9a4e1be55cefff8388da7644f3d36a009f16a32",
-                "reference": "a9a4e1be55cefff8388da7644f3d36a009f16a32",
+                "url": "https://api.github.com/repos/chadicus/coding-standard/zipball/9f05e003457f38317a2df30efa037b3df8f43d26",
+                "reference": "9f05e003457f38317a2df30efa037b3df8f43d26",
                 "shasum": ""
             },
             "require": {
@@ -151,7 +151,7 @@
                 "phpcs",
                 "standard"
             ],
-            "time": "2016-01-25 15:11:21"
+            "time": "2016-06-18 23:47:58"
         },
         {
             "name": "doctrine/instantiator",
