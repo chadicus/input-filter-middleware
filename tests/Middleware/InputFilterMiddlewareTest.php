@@ -49,7 +49,16 @@ final class InputFilterMiddlewareTest extends \PHPUnit_Framework_TestCase
         ];
 
         $middleware = new InputFilterMiddleware($container, $filters, 'query', $this->getStreamFactoryMock());
-        $request = new ServerRequest([], [], null, 'GET', 'php://input', [], [], ['foo' => 'abc', 'bar' => 123, 'boo' => 'true']);
+        $request = new ServerRequest(
+            [],
+            [],
+            null,
+            'GET',
+            'php://input',
+            [],
+            [],
+            ['foo' => 'abc', 'bar' => 123, 'boo' => 'true']
+        );
         $response = new Response();
 
         $next = function ($request, $response) {
@@ -118,6 +127,8 @@ final class InputFilterMiddlewareTest extends \PHPUnit_Framework_TestCase
      * @covers ::__invoke
      *
      * @return void
+     *
+     * @throws \Exception Thrown if middleware test fails.
      */
     public function invokeFilteringFail()
     {
@@ -129,7 +140,16 @@ final class InputFilterMiddlewareTest extends \PHPUnit_Framework_TestCase
         ];
 
         $middleware = new InputFilterMiddleware($container, $filters, 'query', $this->getStreamFactoryMock());
-        $request = new ServerRequest([], [], null, 'GET', 'php://input', [], [], ['foo' => 'abc', 'bar' => '123', 'boo' => 'not boolean']);
+        $request = new ServerRequest(
+            [],
+            [],
+            null,
+            'GET',
+            'php://input',
+            [],
+            [],
+            ['foo' => 'abc', 'bar' => '123', 'boo' => 'not boolean']
+        );
         $response = new Response();
 
         $next = function ($request, $response) {
@@ -156,7 +176,9 @@ final class InputFilterMiddlewareTest extends \PHPUnit_Framework_TestCase
             rewind($stream);
             return new Stream($stream);
         };
-        $factory = $this->getMockBuilder('\\Chadicus\\Psr\\Http\\StreamFactoryInterface')->setMethods(['make'])->getMock();
+        $factory = $this->getMockBuilder(
+            '\\Chadicus\\Psr\\Http\\StreamFactoryInterface'
+        )->setMethods(['make'])->getMock();
         $factory->method('make')->will($this->returnCallback($make));
 
         return $factory;

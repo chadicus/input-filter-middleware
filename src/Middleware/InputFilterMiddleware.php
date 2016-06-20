@@ -46,13 +46,17 @@ final class InputFilterMiddleware implements MiddlewareInterface
      *
      * @param ArrayAccess            $container     Object in which to store the input.
      * @param array                  $filters       The specification to apply to the input.
-     * @param string                 $inputLocation Location of the request to expect the input 'body' or 'query'
+     * @param string                 $inputLocation Location of the request to expect the input 'body' or 'query'.
      * @param StreamFactoryInterface $streamFactory Factory to create message stream upon filter error.
      *
      * @throws \InvalidArgumentException Thrown if $inputLocation is not 'body' or 'query'.
      */
-    public function __construct(ArrayAccess $container, array $filters, $inputLocation, StreamFactoryInterface $streamFactory)
-    {
+    public function __construct(
+        ArrayAccess $container,
+        array $filters,
+        $inputLocation,
+        StreamFactoryInterface $streamFactory
+    ) {
         $this->container = $container;
         $this->filters = $filters;
         if (!in_array($inputLocation, ['body', 'query'])) {
