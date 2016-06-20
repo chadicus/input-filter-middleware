@@ -1,6 +1,7 @@
 {
     "name": "chadicus/psr-input-filter",
     "description": "PSR-7 middleware for filtering request input",
+    "keywords": ["psr", "middleware", "input", "filter"],
     "license": "MIT",
     "authors": [
         {
@@ -22,5 +23,8 @@
     },
     "autoload": {
         "psr-4": { "Chadicus\\Psr\\": "src" }
+    },
+    "autoload-dev": {
+        "psr-4": { "ChadicusTest\\Psr\\": "tests" }
     }
 }
