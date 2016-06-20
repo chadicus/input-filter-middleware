@@ -2,6 +2,7 @@
 
 namespace Chadicus\Psr\Middleware;
 
+use ArrayAccess;
 use Chadicus\Psr\Http\StreamFactoryInterface;
 use DominionEnterprises\Filterer;
 use DominionEnterprises\Util;
