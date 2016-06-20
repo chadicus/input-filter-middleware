@@ -32,7 +32,7 @@ final class InputFilterMiddleware implements MiddlewareInterface
      *
      * @var string
      */
-    private $location;
+    private $inputLocation;
 
     /**
      * Factory for creating message streams.
@@ -46,20 +46,20 @@ final class InputFilterMiddleware implements MiddlewareInterface
      *
      * @param ArrayAccess            $container     Object in which to store the input.
      * @param array                  $filters       The specification to apply to the input.
-     * @param string                 $location      Location of the request to expect the input 'body' or 'query'
+     * @param string                 $inputLocation Location of the request to expect the input 'body' or 'query'
      * @param StreamFactoryInterface $streamFactory Factory to create message stream upon filter error.
      *
-     * @throws \InvalidArgumentException Thrown if $location is not 'body' or 'query'.
+     * @throws \InvalidArgumentException Thrown if $inputLocation is not 'body' or 'query'.
      */
-    public function __construct(ArrayAccess $container, array $filters, $location, StreamFactoryInterface $streamFactory)
+    public function __construct(ArrayAccess $container, array $filters, $inputLocation, StreamFactoryInterface $streamFactory)
     {
         $this->container = $container;
         $this->filters = $filters;
-        if (!in_array($location, ['body', 'query'])) {
-            throw new \InvalidArgumentException('$location must be "body" or "query"');
+        if (!in_array($inputLocation, ['body', 'query'])) {
+            throw new \InvalidArgumentException('$inputLocation must be "body" or "query"');
         }
 
-        $this->location = $location;
+        $this->inputLocation = $inputLocation;
         $this->streamFactory = $streamFactory;
     }
 
@@ -75,7 +75,7 @@ final class InputFilterMiddleware implements MiddlewareInterface
     public function __invoke(ServerRequestInterface $request, ResponseInterface $response, callable $next)
     {
         $input = $request->getQueryParams();
-        if ($this->location === 'body') {
+        if ($this->inputLocation === 'body') {
             $input = (array)$request->getParsedBody();
         }
 
