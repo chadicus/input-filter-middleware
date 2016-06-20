@@ -2,6 +2,9 @@
 
 namespace Chadicus\Psr\Http;
 
+/**
+ * Interface for constructing PSR-7 StreamInterface objects.
+ */
 interface StreamFactoryInterface
 {
     /**
