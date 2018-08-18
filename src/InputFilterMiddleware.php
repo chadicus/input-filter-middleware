@@ -27,13 +27,6 @@ final class InputFilterMiddleware implements MiddlewareInterface
     private $filters;
 
     /**
-     * Location of the request to expect the input.
-     *
-     * @var string
-     */
-    private $inputLocation;
-
-    /**
      * Factory for creating message streams.
      *
      * @var StreamFactoryInterface;
@@ -45,24 +38,15 @@ final class InputFilterMiddleware implements MiddlewareInterface
      *
      * @param Filterer               $inputFilterer The filterer to use for input filtering.
      * @param array                  $filters       The specification to apply to the input.
-     * @param string                 $inputLocation Location of the request to expect the input 'body' or 'query'.
      * @param StreamFactoryInterface $streamFactory Factory to create message stream upon filter error.
-     *
-     * @throws \InvalidArgumentException Thrown if $inputLocation is not 'body' or 'query'.
      */
     public function __construct(
         Filterer $inputFilterer,
         array $filters,
-        $inputLocation,
         StreamFactoryInterface $streamFactory
     ) {
         $this->inputFilterer = $inputFilterer;
         $this->filters = $filters;
-        if (!in_array($inputLocation, ['body', 'query'])) {
-            throw new \InvalidArgumentException('$inputLocation must be "body" or "query"');
-        }
-
-        $this->inputLocation = $inputLocation;
         $this->streamFactory = $streamFactory;
     }
 
@@ -77,11 +61,7 @@ final class InputFilterMiddleware implements MiddlewareInterface
      */
     public function __invoke(ServerRequestInterface $request, ResponseInterface $response, callable $next)
     {
-        $input = $request->getQueryParams();
-        if ($this->inputLocation === 'body') {
-            $input = (array)$request->getParsedBody();
-        }
-
+        $input = $request->getQueryParams() + (array)$request->getParsedBody();
         list($success, $filteredInput, $error) = $this->inputFilterer->filter($this->filters, $input);
         if (!$success) {
             return $response->withStatus(400, 'Bad Request')->withBody($this->createStream($error));

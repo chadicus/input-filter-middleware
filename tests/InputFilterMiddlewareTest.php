@@ -21,21 +21,6 @@ use Zend\Diactoros\Stream;
 final class InputFilterMiddlewareTest extends TestCase
 {
     /**
-     * Verify behavior of __construct() when invalid $queryLocation is given.
-     *
-     * @test
-     * @covers ::__construct
-     * @expectedException \InvalidArgumentException
-     * @expectedExceptionMessage $inputLocation must be "body" or "query"
-     *
-     * @return void
-     */
-    public function constructBadLocation()
-    {
-        new InputFilterMiddleware(new Filterer(), [], 'headers', $this->getStreamFactoryMock());
-    }
-
-    /**
      * Verify basic behavior of __invoke()
      *
      * @test
@@ -51,7 +36,7 @@ final class InputFilterMiddlewareTest extends TestCase
             'boo' => [['bool']],
         ];
 
-        $middleware = new InputFilterMiddleware(new Filterer(), $filters, 'query', $this->getStreamFactoryMock());
+        $middleware = new InputFilterMiddleware(new Filterer(), $filters, $this->getStreamFactoryMock());
         $request = (new ServerRequest())->withQueryParams(['foo' => 'abc', 'bar' => 123, 'boo' => 'true']);
         $response = new Response();
 
@@ -90,7 +75,7 @@ final class InputFilterMiddlewareTest extends TestCase
             'boo' => 'true',
         ];
 
-        $middleware = new InputFilterMiddleware(new Filterer(), $filters, 'body', $this->getStreamFactoryMock());
+        $middleware = new InputFilterMiddleware(new Filterer(), $filters, $this->getStreamFactoryMock());
         $request = (new ServerRequest())->withParsedBody($body)->withMethod('POST');
         $response = new Response();
         $test = $this;
@@ -124,7 +109,7 @@ final class InputFilterMiddlewareTest extends TestCase
             'boo' => [['bool']],
         ];
 
-        $middleware = new InputFilterMiddleware(new Filterer(), $filters, 'query', $this->getStreamFactoryMock());
+        $middleware = new InputFilterMiddleware(new Filterer(), $filters, $this->getStreamFactoryMock());
         $request = (new ServerRequest())->withQueryParams(['foo' => 'abc', 'bar' => '123', 'boo' => 'not boolean']);
         $response = new Response();
 
