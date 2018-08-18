@@ -3,10 +3,11 @@
 namespace Chadicus\Psr\Middleware;
 
 use ArrayAccess;
-use Chadicus\Psr\Http\StreamFactoryInterface;
 use DominionEnterprises\Filterer;
+use Http\Message\StreamFactory as StreamFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use Psr\Http\Message\StreamInterface;
 
 /**
  * Interface for all middleware.
@@ -85,11 +86,17 @@ final class InputFilterMiddleware implements MiddlewareInterface
 
         list($success, $filteredInput, $error) = Filterer::filter($this->filters, $input);
         if (!$success) {
-            return $response->withStatus(400, 'Bad Request')->withBody($this->streamFactory->make($error));
+            return $response->withStatus(400, 'Bad Request')->withBody($this->createStream($error));
         }
 
         $this->container['input'] = $filteredInput;
 
         return $next($request, $response);
+    }
+
+    private function createStream(string $error) : StreamInterface
+    {
+        $json = json_encode(['error' => ['message' => $error]]);
+        return $this->streamFactory->createStream($json);
     }
 }

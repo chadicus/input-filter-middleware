@@ -3,6 +3,8 @@
 namespace ChadicusTest\Psr\Middleware;
 
 use Chadicus\Psr\Middleware\InputFilterMiddleware;
+use Http\Message\StreamFactory;
+use Psr\Http\Message\StreamInterface;
 use Zend\Diactoros\Response;
 use Zend\Diactoros\ServerRequest;
 use Zend\Diactoros\Stream;
@@ -163,23 +165,16 @@ final class InputFilterMiddlewareTest extends \PHPUnit_Framework_TestCase
         $this->assertContains("Field 'boo' with value 'not boolean' failed filtering", (string)$actual->getBody());
     }
 
-    /**
-     * Helper method to get a StreamFactoryInterface mock.
-     *
-     * @return \Chadicus\Psr\Http\StreamFactoryInterface
-     */
-    private function getStreamFactoryMock()
+    private function getStreamFactoryMock() : StreamFactory
     {
-        $make = function ($contents) {
+        $createStream = function ($contents) {
             $stream = fopen('php://temp', 'r+');
             fwrite($stream, $contents);
             rewind($stream);
             return new Stream($stream);
         };
-        $factory = $this->getMockBuilder(
-            '\\Chadicus\\Psr\\Http\\StreamFactoryInterface'
-        )->setMethods(['make'])->getMock();
-        $factory->method('make')->will($this->returnCallback($make));
+        $factory = $this->getMockBuilder(StreamFactory::class)->getMock();
+        $factory->method('createStream')->will($this->returnCallback($createStream));
 
         return $factory;
     }
