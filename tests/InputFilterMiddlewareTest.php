@@ -6,6 +6,7 @@ use Chadicus\Psr\Middleware\InputFilterMiddleware;
 use Http\Message\StreamFactory;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\StreamInterface;
+use TraderInteractive\Filterer;
 use Zend\Diactoros\Response;
 use Zend\Diactoros\ServerRequest;
 use Zend\Diactoros\Stream;
@@ -31,7 +32,7 @@ final class InputFilterMiddlewareTest extends TestCase
      */
     public function constructBadLocation()
     {
-        new InputFilterMiddleware([], 'headers', $this->getStreamFactoryMock());
+        new InputFilterMiddleware(new Filterer(), [], 'headers', $this->getStreamFactoryMock());
     }
 
     /**
@@ -50,7 +51,7 @@ final class InputFilterMiddlewareTest extends TestCase
             'boo' => [['bool']],
         ];
 
-        $middleware = new InputFilterMiddleware($filters, 'query', $this->getStreamFactoryMock());
+        $middleware = new InputFilterMiddleware(new Filterer(), $filters, 'query', $this->getStreamFactoryMock());
         $request = (new ServerRequest())->withQueryParams(['foo' => 'abc', 'bar' => 123, 'boo' => 'true']);
         $response = new Response();
 
@@ -89,7 +90,7 @@ final class InputFilterMiddlewareTest extends TestCase
             'boo' => 'true',
         ];
 
-        $middleware = new InputFilterMiddleware($filters, 'body', $this->getStreamFactoryMock());
+        $middleware = new InputFilterMiddleware(new Filterer(), $filters, 'body', $this->getStreamFactoryMock());
         $request = (new ServerRequest())->withParsedBody($body)->withMethod('POST');
         $response = new Response();
         $test = $this;
@@ -123,7 +124,7 @@ final class InputFilterMiddlewareTest extends TestCase
             'boo' => [['bool']],
         ];
 
-        $middleware = new InputFilterMiddleware($filters, 'query', $this->getStreamFactoryMock());
+        $middleware = new InputFilterMiddleware(new Filterer(), $filters, 'query', $this->getStreamFactoryMock());
         $request = (new ServerRequest())->withQueryParams(['foo' => 'abc', 'bar' => '123', 'boo' => 'not boolean']);
         $response = new Response();
 

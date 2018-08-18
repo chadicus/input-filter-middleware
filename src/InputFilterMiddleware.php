@@ -15,6 +15,11 @@ use TraderInteractive\Filterer;
 final class InputFilterMiddleware implements MiddlewareInterface
 {
     /**
+     * @var Filterer
+     */
+    private $inputFilterer;
+
+    /**
      * The specification to apply to the input.
      *
      * @var array
@@ -38,6 +43,7 @@ final class InputFilterMiddleware implements MiddlewareInterface
     /**
      * Create a new instance of the middleware.
      *
+     * @param Filterer               $inputFilterer The filterer to use for input filtering.
      * @param array                  $filters       The specification to apply to the input.
      * @param string                 $inputLocation Location of the request to expect the input 'body' or 'query'.
      * @param StreamFactoryInterface $streamFactory Factory to create message stream upon filter error.
@@ -45,10 +51,12 @@ final class InputFilterMiddleware implements MiddlewareInterface
      * @throws \InvalidArgumentException Thrown if $inputLocation is not 'body' or 'query'.
      */
     public function __construct(
+        Filterer $inputFilterer,
         array $filters,
         $inputLocation,
         StreamFactoryInterface $streamFactory
     ) {
+        $this->inputFilterer = $inputFilterer;
         $this->filters = $filters;
         if (!in_array($inputLocation, ['body', 'query'])) {
             throw new \InvalidArgumentException('$inputLocation must be "body" or "query"');
@@ -74,7 +82,7 @@ final class InputFilterMiddleware implements MiddlewareInterface
             $input = (array)$request->getParsedBody();
         }
 
-        list($success, $filteredInput, $error) = Filterer::filter($this->filters, $input);
+        list($success, $filteredInput, $error) = $this->inputFilterer->filter($this->filters, $input);
         if (!$success) {
             return $response->withStatus(400, 'Bad Request')->withBody($this->createStream($error));
         }
