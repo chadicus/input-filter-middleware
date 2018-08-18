@@ -31,7 +31,7 @@ final class InputFilterMiddlewareTest extends TestCase
      */
     public function constructBadLocation()
     {
-        new InputFilterMiddleware(new \ArrayObject, [], 'headers', $this->getStreamFactoryMock());
+        new InputFilterMiddleware([], 'headers', $this->getStreamFactoryMock());
     }
 
     /**
@@ -44,33 +44,27 @@ final class InputFilterMiddlewareTest extends TestCase
      */
     public function invoke()
     {
-        $container = new \ArrayObject();
         $filters = [
             'foo' => [['string']],
             'bar' => [['uint']],
             'boo' => [['bool']],
         ];
 
-        $middleware = new InputFilterMiddleware($container, $filters, 'query', $this->getStreamFactoryMock());
+        $middleware = new InputFilterMiddleware($filters, 'query', $this->getStreamFactoryMock());
         $request = (new ServerRequest())->withQueryParams(['foo' => 'abc', 'bar' => 123, 'boo' => 'true']);
         $response = new Response();
 
-        $next = function ($request, $response) {
+        $test = $this;
+        $next = function ($request, $response) use ($test) {
+            $test->assertSame(
+                ['foo' => 'abc', 'bar' => 123, 'boo' => true ],
+                $request->getAttribute('filtered-input')
+            );
             return $response;
         };
 
         $actual = $middleware($request, $response, $next);
-
         $this->assertSame($actual, $response);
-
-        $this->assertSame(
-            [
-                'foo' => 'abc',
-                'bar' => 123,
-                'boo' => true,
-            ],
-            $container['input']
-        );
     }
 
     /**
@@ -83,7 +77,6 @@ final class InputFilterMiddlewareTest extends TestCase
      */
     public function invokeInputInBody()
     {
-        $container = new \ArrayObject();
         $filters = [
             'foo' => [['string']],
             'bar' => [['uint']],
@@ -96,23 +89,20 @@ final class InputFilterMiddlewareTest extends TestCase
             'boo' => 'true',
         ];
 
-        $middleware = new InputFilterMiddleware($container, $filters, 'body', $this->getStreamFactoryMock());
+        $middleware = new InputFilterMiddleware($filters, 'body', $this->getStreamFactoryMock());
         $request = (new ServerRequest())->withParsedBody($body)->withMethod('POST');
         $response = new Response();
-        $next = function ($request, $response) {
+        $test = $this;
+        $next = function ($request, $response) use ($test) {
+            $test->assertSame(
+                ['foo' => 'abc', 'bar' => 123, 'boo' => true ],
+                $request->getAttribute('filtered-input')
+            );
             return $response;
         };
 
         $actual = $middleware($request, $response, $next);
         $this->assertSame($actual, $response);
-        $this->assertSame(
-            [
-                'foo' => 'abc',
-                'bar' => 123,
-                'boo' => true,
-            ],
-            $container['input']
-        );
     }
 
     /**
@@ -127,14 +117,13 @@ final class InputFilterMiddlewareTest extends TestCase
      */
     public function invokeFilteringFail()
     {
-        $container = new \ArrayObject();
         $filters = [
             'foo' => [['string']],
             'bar' => [['uint']],
             'boo' => [['bool']],
         ];
 
-        $middleware = new InputFilterMiddleware($container, $filters, 'query', $this->getStreamFactoryMock());
+        $middleware = new InputFilterMiddleware($filters, 'query', $this->getStreamFactoryMock());
         $request = (new ServerRequest())->withQueryParams(['foo' => 'abc', 'bar' => '123', 'boo' => 'not boolean']);
         $response = new Response();
 
