@@ -3,11 +3,11 @@
 namespace Chadicus\Psr\Middleware;
 
 use ArrayAccess;
-use DominionEnterprises\Filterer;
 use Http\Message\StreamFactory as StreamFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\StreamInterface;
+use TraderInteractive\Filterer;
 
 /**
  * Interface for all middleware.
