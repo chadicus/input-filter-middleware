@@ -3,6 +3,9 @@
     "description": "PSR-7 middleware for filtering request input",
     "keywords": ["psr", "middleware", "input", "filter"],
     "license": "MIT",
+    "config": {
+        "sort-packages": true
+    },
     "require": {
         "php": "~5.6 || ~7.0",
         "dominionenterprises/filter": "^2.0",
