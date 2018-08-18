@@ -52,16 +52,7 @@ final class InputFilterMiddlewareTest extends TestCase
         ];
 
         $middleware = new InputFilterMiddleware($container, $filters, 'query', $this->getStreamFactoryMock());
-        $request = new ServerRequest(
-            [],
-            [],
-            null,
-            'GET',
-            'php://input',
-            [],
-            [],
-            ['foo' => 'abc', 'bar' => 123, 'boo' => 'true']
-        );
+        $request = (new ServerRequest())->withQueryParams(['foo' => 'abc', 'bar' => 123, 'boo' => 'true']);
         $response = new Response();
 
         $next = function ($request, $response) {
@@ -99,13 +90,14 @@ final class InputFilterMiddlewareTest extends TestCase
             'boo' => [['bool']],
         ];
 
-        $body = new \StdClass();
-        $body->foo = 'abc';
-        $body->bar = '123';
-        $body->boo = 'true';
+        $body = [
+            'foo' => 'abc',
+            'bar' => '123',
+            'boo' => 'true',
+        ];
 
         $middleware = new InputFilterMiddleware($container, $filters, 'body', $this->getStreamFactoryMock());
-        $request = new ServerRequest([], [], null, 'POST', 'php://input', [], [], [], $body);
+        $request = (new ServerRequest())->withParsedBody($body)->withMethod('POST');
         $response = new Response();
         $next = function ($request, $response) {
             return $response;
@@ -143,16 +135,7 @@ final class InputFilterMiddlewareTest extends TestCase
         ];
 
         $middleware = new InputFilterMiddleware($container, $filters, 'query', $this->getStreamFactoryMock());
-        $request = new ServerRequest(
-            [],
-            [],
-            null,
-            'GET',
-            'php://input',
-            [],
-            [],
-            ['foo' => 'abc', 'bar' => '123', 'boo' => 'not boolean']
-        );
+        $request = (new ServerRequest())->withQueryParams(['foo' => 'abc', 'bar' => '123', 'boo' => 'not boolean']);
         $response = new Response();
 
         $next = function ($request, $response) {
