@@ -4,6 +4,7 @@ namespace ChadicusTest\Psr\Middleware;
 
 use Chadicus\Psr\Middleware\InputFilterMiddleware;
 use Http\Message\StreamFactory;
+use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\StreamInterface;
 use Zend\Diactoros\Response;
 use Zend\Diactoros\ServerRequest;
@@ -16,7 +17,7 @@ use Zend\Diactoros\Stream;
  * @covers ::<private>
  * @covers ::__construct
  */
-final class InputFilterMiddlewareTest extends \PHPUnit_Framework_TestCase
+final class InputFilterMiddlewareTest extends TestCase
 {
     /**
      * Verify behavior of __construct() when invalid $queryLocation is given.
